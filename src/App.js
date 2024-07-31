@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import LoginPage from "./pages/login";
-import TrackerPage from "./pages/tracker";
+import NumArtistsPage from "./pages/num_artists";
 
 function App() {
 
@@ -9,7 +9,7 @@ function App() {
     <BrowserRouter>
     <Routes>
       <Route path = "/" element = {<LoginPage/>} />
-      <Route path = '/tracker' element = {<TrackerPage/>} />
+      <Route path = '/num_artists' element = {<NumArtistsPage/>} />
     </Routes>
     </BrowserRouter>
   )
