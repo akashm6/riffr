@@ -1,0 +1,111 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arvo';
+}
+
+.login-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background: linear-gradient(135deg, #1a1a1a, #3a3a3a);
+    animation: gradient 15s ease infinite;
+    color: white;
+    text-align: center;
+}
+
+.animated-title {
+    font-size: 4rem;
+    margin-bottom: 20px;
+    animation: float 3s ease-in-out infinite;
+    background: linear-gradient(90deg, #1db954, #1ed760);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.6);
+}
+
+.login-button {
+    padding: 12px 25px;
+    font-size: 1.2rem;
+    background-color: #1db954;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s, background-color 0.3s;
+    position: relative;
+    overflow: hidden;
+    font-family: 'Arvo';
+}
+
+.login-button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
+    background-color: #1ed760;
+}
+
+.login-button:after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 300%;
+    height: 300%;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    transition: width 0.4s ease, height 0.4s ease;
+    z-index: 0;
+    transform: translate(-50%, -50%) scale(0);
+}
+
+.login-button:hover:after {
+    width: 400%;
+    height: 400%;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-20px);
+    }
+}
+
+@keyframes gradient {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.footer {
+    position: absolute;
+    bottom: 20px;
+    font-size: 1.3rem;
+    color: white;
+    font-family: 'Arvo';
+}
+
+.footer a {
+    color: #1db954; /* Spotify green */
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.footer a:hover {
+    color: #1ed760; /* Slightly lighter green on hover */
+}
+
