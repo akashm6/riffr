@@ -1,0 +1,128 @@
+/* Resets */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arvo';
+}
+
+.num-artists-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh; 
+    color: white;
+    text-align: center;
+}
+
+.form-label {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    animation: fadeIn 1s ease-in-out; 
+}
+
+.artist-input-box {
+    width: 80%;
+    padding: 10px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    color: #333; 
+    background-color: rgba(255, 255, 255, 0.8); 
+    transition: box-shadow 0.3s;
+}
+
+.artist-input-box:focus {
+    outline: none;
+    box-shadow: 0 0 10px rgba(29, 185, 84, 0.6); 
+}
+
+.artist-submit-box {
+    padding: 12px 25px;
+    margin-top: 18px;
+    margin-left: 15px;
+    font-size: 1.2rem;
+    background-color: #1db954;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s, background-color 0.3s;
+    position: relative;
+    overflow: hidden;
+    font-family: 'Arvo';
+    animation: fadeIn 1s ease-in-out; /* Add fadeIn animation */
+}
+
+
+.artist-submit-box:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
+    background-color: #1ed760;
+}
+
+.artist-submit-box:after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 300%;
+    height: 300%;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    transition: width 0.4s ease, height 0.4s ease;
+    z-index: 0;
+    transform: translate(-50%, -50%) scale(0);
+}
+
+.artist-submit-box:hover:after {
+    width: 400%;
+    height: 400%;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes gradient {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.footer {
+    position: absolute;
+    bottom: 20px;
+    font-size: 1.3rem;
+    color: white;
+    font-family: 'Arvo';
+}
+
+.footer a {
+    color: #1db954; 
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.footer a:hover {
+    color: #1ed760; 
+}
