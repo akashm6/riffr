@@ -27,7 +27,7 @@ def callback():
     token_info = sp.get_access_token(code)
     session["token_info"] = token_info
     print(token_info)
-    return redirect('http://localhost:3000/tracker')
+    return redirect('http://localhost:3000/num_artists')
 
 if __name__ == '__main__':
     app.run(debug = True)
