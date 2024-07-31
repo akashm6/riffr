@@ -4,11 +4,11 @@ from spotipy.oauth2 import SpotifyOAuth
 
 app = Flask(__name__)
 CORS(app)
-app.secret_key = 'Digitalsmo12#'
+app.secret_key = 'XXX'
 
 sp = SpotifyOAuth(
-    client_id="d9fa0a5b61b148d1810d4a558d30d77b",
-    client_secret="bfcd506b3eab4e24846ac2793d125d96",
+    client_id="XXX",
+    client_secret="XXX",
     redirect_uri="http://localhost:5000/callback",  
     scope="user-library-read"
 )
