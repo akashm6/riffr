@@ -1,2 +1,2 @@
-# riff-notif
-full-stack web app to sync spotify top artists with concert notifications and location info
+# Riff Notif
+## Ongoing -> ReadME soon!
