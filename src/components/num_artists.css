@@ -1,4 +1,3 @@
-/* Resets */
 * {
     margin: 0;
     padding: 0;
@@ -56,7 +55,7 @@ body {
     position: relative;
     overflow: hidden;
     font-family: 'Arvo';
-    animation: fadeIn 1s ease-in-out; /* Add fadeIn animation */
+    animation: fadeIn 1s ease-in-out; 
 }
 
 
