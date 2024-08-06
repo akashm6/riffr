@@ -1,0 +1,113 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arvo';
+}
+
+.about-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh; 
+    color: white;
+    text-align: center;
+    background: linear-gradient(135deg, #1a1a1a, #3a3a3a);
+    animation: gradient 15s ease infinite;
+}
+
+.about-title {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    animation: fadeIn 1s ease-in-out;
+}
+
+.about-description {
+    font-size: 1.5rem;
+    margin: 10px 0;
+    animation: fadeIn 1s ease-in-out;
+    max-width: 600px; 
+}
+
+
+.about-description a {
+    color: #1db954;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.about-description a:hover {
+    color: #1ed760; 
+}
+
+@keyframes gradient {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.back-to-home-button {
+    padding: 12px 25px;
+    font-size: 1.2rem;
+    background-color: #1db954;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s, background-color 0.3s;
+    position: relative;
+    overflow: hidden;
+    font-family: 'Arvo';
+    top: 20px;
+    right: 20px;
+    text-decoration: none;
+    position: absolute;
+}
+
+.back-to-home-button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
+    background-color: #1ed760; 
+}
+
+.back-to-home-button:after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%; 
+    height: 100%; 
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    transition: width 0.4s ease, height 0.4s ease;
+    z-index: 0;
+    transform: translate(-50%, -50%) scale(0);
+}
+
+.back-to-home-button:hover:after {
+    width: 150%;
+    height: 150%;
+    transform: translate(-50%, -50%) scale(1);
+}
+
