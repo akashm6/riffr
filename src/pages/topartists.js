@@ -1,4 +1,3 @@
-// src/components/TopArtistsPage.js
 import React, { useEffect, useState } from "react";
 import ArtistCard from "../components/artistcard";
 import '../components/top_artists.css';
