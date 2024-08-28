@@ -1,4 +1,3 @@
-// src/components/NumArtistsPage.js
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import '../components/num_artists.css';
@@ -18,7 +17,6 @@ function NumArtistsPage() {
             }
             const data = await response.json();
             navigate('/top_artists', { state: { artists: data, numArtists } });
-            console.log(data);
         } catch (error) {
             console.error("There was an error fetching the top artists:", error);
         }
