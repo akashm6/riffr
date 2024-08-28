@@ -1,0 +1,15 @@
+/* src/components/countrycard.css */
+.country-card {
+    background-color: #333;
+    border-radius: 10px;
+    color: #fff;
+    padding: 20px;
+    margin: 10px 0;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+}
+
+.country-card:hover {
+    transform: scale(1.05);
+}

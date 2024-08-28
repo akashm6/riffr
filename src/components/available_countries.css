@@ -1,0 +1,13 @@
+.available-countries-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
+
+.countries-list {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 600px;
+}
