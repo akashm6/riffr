@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import CountryCard from "../components/countrycard";
 import '../components/available_countries.css';
+import LoadingSpinner from "../components/loading";
+import BackButton from '../components/backbutton';
 
 function AvailableCountriesPage() {
     const { artistName } = useParams();
@@ -27,20 +29,21 @@ function AvailableCountriesPage() {
         fetchCountries();
     }, [artistName]);
 
-    if (loading) return <p>Loading...</p>;
+    if (loading) return <LoadingSpinner />;
 
     return (
         <div className="available-countries-container">
-            <h1>Select a Country for {artistName} Concerts</h1>
+            <h1 className='country-header'>Available Countries for {artistName} Concerts</h1>
             <div className="countries-list">
                 {countries.map((country, index) => (
                     <CountryCard 
                         key={index} 
-                        country={country} 
-                        onClick={() => history(`/concerts/${artistName}/${country}`)} 
+                        country={country.country_name} 
+                        onClick={() => history(`/concerts/${artistName}/${country.country_code}`)} 
                     />
                 ))}
             </div>
+            <BackButton />
         </div>
     );
 }
