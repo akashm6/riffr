@@ -24,6 +24,9 @@ sp_oauth = SpotifyOAuth(
 )
 
 ticketmaster_token = os.environ.get('TICKETMASTER_CONSUMER_KEY')
+maps_api_key = os.environ.get('GOOGLE_MAPS_API_KEY')
+
+country_codes_to_names = {}
 
 @app.route('/')
 def login():
@@ -34,6 +37,8 @@ def login():
 def callback():
     code = request.args.get('code')
     token_info = sp_oauth.get_access_token(code)
+    print(f'Token Info: {token_info}')
+    session.clear()
     session["token_info"] = token_info
     return redirect('http://localhost:3000/num_artists')
 
@@ -76,12 +81,11 @@ def fetch_concerts():
     results = []
     concert_title = ''
     for event in data:
-        #print(event)
         ticket_url = event['url']
         name = event['name']
         date = str(parse_date(event['dates']['start']['localDate']))
         date = date[:date.index(' ')]
-        time = event['dates']['start']['localTime']
+        time = str(parse_time(event['dates']['start']['localTime']))
         venue = event['_embedded']['venues'][0]['name']
         city = event['_embedded']['venues'][0]['city']['name']
         address = f"{event['_embedded']['venues'][0]['address']['line1']}, {city},{country_code}"
@@ -93,32 +97,49 @@ def fetch_concerts():
             'city': city,
             'date': date,
             'time': time,
-            'ticket_link': ticket_url
+            'ticket_link': ticket_url,
+            'maps_key': maps_api_key
         })
     return jsonify(results)
 
-@app.route('/available-countries', methods = ['GET'])
-def get_available_countries():
-    keyword = request.args.get('artistName')
-    available = []
-    with open('./country_codes.csv', newline='') as file:
+def load_country_codes():
+    global country_codes_to_names
+    with open('./country_codes.csv', newline = '') as file:
         reader = csv.DictReader(file)
-        country_data = [row for row in reader]
-    for country in country_data:
-        url = f"https://app.ticketmaster.com/discovery/v2/events.json?size=10&keyword={keyword}&countryCode={country['country_code']}&apikey={ticketmaster_token}"
+        country_codes_to_names = {row['country_code']: row['country_name'] for row in reader}
+
+@app.route('/available-countries', methods=['GET'])
+def get_available_countries():
+    if not country_codes_to_names:
+        load_country_codes()
+
+    artist_name = request.args.get('artistName')
+    available = []
+
+    for country_code in country_codes_to_names:
+        url = f"https://app.ticketmaster.com/discovery/v2/events.json?size=10&keyword={artist_name}&countryCode={country_code}&apikey={ticketmaster_token}"
         try:
             response = requests.get(url)
             data = response.json()
-            ticket_link = data['_embedded']
-            available.append(country['country_code'])
+            if '_embedded' in data:
+                available.append({
+                    'country_code': country_code,
+                    'country_name': country_codes_to_names[country_code]
+                })
         except:
             continue
+
     return jsonify(available)
 
 def parse_date(date):
     date = datetime.fromisoformat(date.replace("Z", "+00:00"))
     formatted_date = date.strftime("%m/%d/%Y %I:%M %p")
     return formatted_date
+
+def parse_time(time):
+    time_object = datetime.strptime(time,'%H:%M:%S')
+    formatted_time = time_object.strftime("%I:%M %p")
+    return formatted_time
 
 if __name__ == '__main__':
     app.run(debug=True)
