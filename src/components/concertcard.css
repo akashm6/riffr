@@ -2,13 +2,14 @@
     background-color: rgba(255, 255, 255, 0.1); 
     border-radius: 10px;
     padding: 20px;
+    width: 80vh;
     margin: 15px 0;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
     transition: transform 0.3s;
 }
 
 .concert-card:hover {
-    transform: scale(1.05); 
+    transform: scale(1.01); 
 }
 
 .concert-card h3 {
@@ -20,14 +21,29 @@
     color: #cccccc; 
 }
 
-.more-info-link {
-    color: #1DB954; 
-    text-decoration: none; 
-    font-weight: bold; 
-    display: inline-block;
+.buy-ticket-button, .show-map-button {
+    background-color: #1DB954; 
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
     margin-top: 10px;
+    display: inline-block;
+    text-align: center;
+    text-decoration: none;
+    margin-right: 10px;
+    font-family: Arvo;
 }
 
-.more-info-link:hover {
-    text-decoration: underline; 
+.buy-ticket-button:hover, .show-map-button:hover {
+    background-color: #17a84c; 
+    transform: scale(1.05); 
+}
+
+.map-frame {
+    margin-top: 100px;
 }
