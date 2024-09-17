@@ -1,9 +1,11 @@
 from flask import Flask, request, redirect, session, jsonify
 from spotipy.oauth2 import SpotifyOAuth
+from psycopg2.extras import Json
 from dotenv import load_dotenv
 from datetime import datetime
 from flask_cors import CORS
 import requests
+import psycopg2
 import spotipy
 import pathlib
 import csv
@@ -28,19 +30,107 @@ maps_api_key = os.environ.get('GOOGLE_MAPS_API_KEY')
 
 country_codes_to_names = {}
 
+def get_db_connection():
+    conn = psycopg2.connect(
+        dbname=os.environ.get('DB_NAME'),
+        user=os.environ.get('DB_USER'),
+        password=os.environ.get('DB_PASSWORD'),
+        host=os.environ.get('DB_HOST')
+    )
+    return conn
+
+@app.route('/create-tables')
+def create_tables():
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute('''
+        CREATE TABLE IF NOT EXISTS artist_countries (
+            artist_name VARCHAR(255) PRIMARY KEY,
+            countries JSONB,
+            last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+    ''')
+    conn.commit()
+    cur.close()
+    conn.close()
+    return "Tables created successfully"
+
+def cache_countries(artist_name, countries):
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute("""
+        INSERT INTO artist_countries (artist_name, countries) 
+        VALUES (%s, %s)
+        ON CONFLICT (artist_name) 
+        DO UPDATE SET countries = EXCLUDED.countries, last_updated = CURRENT_TIMESTAMP
+        """,
+        (artist_name, Json(countries))  
+    )
+    conn.commit()
+    cur.close()
+    conn.close()
+
+def get_cached_countries(artist_name):
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute("SELECT countries FROM artist_countries WHERE artist_name = %s", (artist_name,))
+    result = cur.fetchone()
+    cur.close()
+    conn.close()
+    if result is not None:
+        return result[0] 
+    return None 
+
+
+@app.route('/available-countries', methods=['GET'])
+def get_available_countries():
+    if not country_codes_to_names:
+        load_country_codes()
+
+    artist_name = request.args.get('artistName')
+
+    cached_countries = get_cached_countries(artist_name)
+    if cached_countries is not None:
+        return jsonify(cached_countries) 
+
+    available = []
+    for country_code in country_codes_to_names:
+        url = f"https://app.ticketmaster.com/discovery/v2/events.json?size=10&keyword={artist_name}&countryCode={country_code}&apikey={ticketmaster_token}"
+        try:
+            response = requests.get(url)
+            data = response.json()
+            if '_embedded' in data:
+                available.append({
+                    'country_code': country_code,
+                    'country_name': country_codes_to_names.get(country_code)
+                })
+        except:
+            continue
+
+    if not available:
+        cache_countries(artist_name, {'no_concerts': True})
+        return jsonify({'no_concerts': True}) 
+
+    cache_countries(artist_name, available)
+
+    return jsonify(available)
+
+
 @app.route('/')
-def login():
+def login(): 
+    if os.path.exists('./.cache'):
+        os.remove('./.cache')
     authorization_url = sp_oauth.get_authorize_url()
+    session['token_info'] = sp_oauth.get_cached_token()
     return redirect(authorization_url)
 
 @app.route('/callback')
 def callback():
-    code = request.args.get('code')
-    token_info = sp_oauth.get_access_token(code)
-    print(f'Token Info: {token_info}')
+    token_info = sp_oauth.get_access_token(request.args['code'])
     session.clear()
     session["token_info"] = token_info
     return redirect('http://localhost:3000/num_artists')
+
 
 @app.route('/top_artists')
 def fetch_top_artists():
@@ -56,11 +146,11 @@ def fetch_top_artists():
     artists = []
     for item in results['items']:
         artists.append({
-            'name': item['name'],
-            'image': item['images'][0]['url'] if item['images'] else None,
-            'url': item['external_urls']['spotify'],
-            'followers': f"{item['followers']['total']:,}",
-            'genres': [genre.capitalize() for genre in item['genres']] 
+            'name': item.get('name'),
+            'image': item.get('images')[0].get('url') if item.get('images') else None,
+            'url': item.get('external_urls').get('spotify'),
+            'followers': f"{item.get('followers').get('total'):,}",
+            'genres': [genre.capitalize() for genre in item.get('genres')] 
         })
 
     return jsonify(artists)
@@ -77,18 +167,17 @@ def fetch_concerts():
     response = requests.get(url)
     response.raise_for_status()
     data = response.json()
-    data = data['_embedded']['events']
+    data = data.get('_embedded').get('events')
     results = []
-    concert_title = ''
     for event in data:
-        ticket_url = event['url']
-        name = event['name']
-        date = str(parse_date(event['dates']['start']['localDate']))
+        ticket_url = event.get('url')
+        name = event.get('name')
+        date = str(parse_date(event.get('dates').get('start').get('localDate')))
         date = date[:date.index(' ')]
-        time = str(parse_time(event['dates']['start']['localTime']))
-        venue = event['_embedded']['venues'][0]['name']
-        city = event['_embedded']['venues'][0]['city']['name']
-        address = f"{event['_embedded']['venues'][0]['address']['line1']}, {city},{country_code}"
+        time = str(parse_time(event.get('dates').get('start').get('localTime')))
+        venue = event.get('_embedded').get('venues')[0].get('name')
+        city = event.get('_embedded').get('venues')[0].get('city').get('name')
+        address = f"{event.get('_embedded').get('venues')[0].get('address').get('line1')}, {city},{country_code}"
         results.append({
             'title': name,
             'artist_name': artist_name,
@@ -107,29 +196,6 @@ def load_country_codes():
     with open('./country_codes.csv', newline = '') as file:
         reader = csv.DictReader(file)
         country_codes_to_names = {row['country_code']: row['country_name'] for row in reader}
-
-@app.route('/available-countries', methods=['GET'])
-def get_available_countries():
-    if not country_codes_to_names:
-        load_country_codes()
-
-    artist_name = request.args.get('artistName')
-    available = []
-
-    for country_code in country_codes_to_names:
-        url = f"https://app.ticketmaster.com/discovery/v2/events.json?size=10&keyword={artist_name}&countryCode={country_code}&apikey={ticketmaster_token}"
-        try:
-            response = requests.get(url)
-            data = response.json()
-            if '_embedded' in data:
-                available.append({
-                    'country_code': country_code,
-                    'country_name': country_codes_to_names[country_code]
-                })
-        except:
-            continue
-
-    return jsonify(available)
 
 def parse_date(date):
     date = datetime.fromisoformat(date.replace("Z", "+00:00"))
