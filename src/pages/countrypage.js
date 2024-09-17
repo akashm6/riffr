@@ -4,11 +4,14 @@ import CountryCard from "../components/countrycard";
 import '../components/available_countries.css';
 import LoadingSpinner from "../components/loading";
 import BackButton from '../components/backbutton';
+import ErrorCard from "../components/errorcard";
 
 function AvailableCountriesPage() {
     const { artistName } = useParams();
     const [countries, setCountries] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
     const history = useNavigate();
 
     useEffect(() => {
@@ -17,11 +20,20 @@ function AvailableCountriesPage() {
             try {
                 const response = await fetch(`http://localhost:5000/available-countries?artistName=${encodeURIComponent(artistName)}`);
                 const data = await response.json();
-                console.log(data)
-                setCountries(data);
+
+                if (data.no_concerts) {
+                    console.log('no concerts found')
+                    setError(true);
+                
+                } else {
+                    setErrorMessage(`${artistName} does not have any upcoming concerts!`)
+                    console.log('error')
+                    setCountries(data);
+                }
+
                 setLoading(false);
             } catch (error) {
-                console.error("Error fetching available countries:", error);
+                setError(true);
                 setLoading(false);
             }
         };
@@ -30,6 +42,8 @@ function AvailableCountriesPage() {
     }, [artistName]);
 
     if (loading) return <LoadingSpinner />;
+    
+    if (error || countries.length === 0) return <ErrorCard message={errorMessage} />;
 
     return (
         <div className="available-countries-container">
