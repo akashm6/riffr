@@ -11,7 +11,7 @@ function ConcertCard({ concert }) {
     const getMapUrl = () => {
         const address = encodeURIComponent(concert.address);
         const maps_key = encodeURIComponent(concert.maps_key)
-        return `https://www.google.com/maps/embed/v1/place?key=${maps_key}&q=${address}`;
+        return `https://www.google.com/maps/embed/v1/place?key=${maps_key}&q=${address}&maptype=satellite`;
     };
 
     return (
