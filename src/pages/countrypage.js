@@ -22,12 +22,10 @@ function AvailableCountriesPage() {
                 const data = await response.json();
 
                 if (data.no_concerts) {
-                    console.log('no concerts found')
                     setError(true);
                 
                 } else {
                     setErrorMessage(`${artistName} does not have any upcoming concerts!`)
-                    console.log('error')
                     setCountries(data);
                 }
 
