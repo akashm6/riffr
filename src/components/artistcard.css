@@ -7,7 +7,7 @@
     padding: 20px;
     margin: 10px 0;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-    width: 70%; 
+    width: 58%; 
 }
 
 .artist-image {
@@ -29,26 +29,26 @@
     align-items: flex-end; 
 }
 
-.spotify-link {
-    color: #1DB954;
-    text-decoration: none; 
-    font-weight: bold; 
-    margin-bottom: 10px; 
-}
-
-.spotify-link:hover {
-    text-decoration: underline; 
-}
-
-.concert-info-button {
-    background-color: #ffffff;
-    color: #000; 
-    border: none; 
+.concert-info-button, .spotify-link {
+    background-color: #1DB954; 
+    color: #ffffff;
+    border: none;
     border-radius: 5px;
-    padding: 8px 12px;
-    cursor: pointer; 
+    padding: 10px 20px;
+    font-size: 1rem;
+    width: 20vh;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+    margin-top: 10px;
+    display: inline-block;
+    text-align: center;
+    text-decoration: none;
+    margin-right: 10px;
+    font-family: Arvo;
 }
 
-.concert-info-button:hover {
-    background-color: rgba(255, 255, 255, 0.3); 
+.concert-info-button:hover, .spotify-link:hover {
+    background-color: #17a84c; 
+    transform: scale(1.05); 
 }
