@@ -1,11 +1,51 @@
 .concert-info-container {
+    display: flex;        
+    flex-direction: column;  
+    align-items: center;     
+    justify-content: center;
+    min-height: 100vh;
+    padding: 20px;   
+}
+
+
+.concerts-list {
+    display: flex;        
+    flex-direction: column;   
+    align-items: center;      
+    width: 100%;               
+}
+
+.concert-card {
+    background-color: rgba(255, 255, 255, 0.1); 
+    border-radius: 10px;
     padding: 20px;
-    background-color: #000; 
+    max-width: 80vh;
+    margin: 15px 0;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    transition: transform 0.3s;
+}
+
+.concert-card:hover {
+    transform: scale(1.01); 
+}
+
+.concert-card h3 {
+    margin: 0;
     color: #ffffff;
 }
 
-.concerts-list {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+.concert-card p {
+    color: #cccccc; 
+}
+
+.more-info-link {
+    color: #1DB954; 
+    text-decoration: none; 
+    font-weight: bold; 
+    display: inline-block;
+    margin-top: 10px;
+}
+
+.more-info-link:hover {
+    text-decoration: underline; 
 }
