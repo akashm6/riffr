@@ -7,7 +7,7 @@
     padding: 20px;
     margin: 10px 0;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-    width: 58%; 
+    width: 65%; 
 }
 
 .artist-image {
@@ -30,7 +30,7 @@
 }
 
 .concert-info-button, .spotify-link {
-    background-color: #1DB954; 
+    background: linear-gradient(135deg, rgba(16, 255, 100, 0.8), rgba(30, 179, 77, 0.8));
     color: #ffffff;
     border: none;
     border-radius: 5px;
