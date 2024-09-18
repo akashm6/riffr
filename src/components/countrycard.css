@@ -1,6 +1,5 @@
-/* src/components/countrycard.css */
 .country-card {
-    background-color: #333;
+    background-color: rgba(255, 255, 255, 0.1); 
     border-radius: 10px;
     color: #fff;
     padding: 20px;
@@ -12,4 +11,4 @@
 
 .country-card:hover {
     transform: scale(1.05);
-}
+} 
