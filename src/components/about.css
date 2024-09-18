@@ -16,7 +16,7 @@ body {
     height: 100vh; 
     color: white;
     text-align: center;
-    background: linear-gradient(135deg, #1a1a1a, #3a3a3a);
+    background-color: #282c34;
     animation: gradient 15s ease infinite;
 }
 
@@ -70,9 +70,9 @@ body {
 .back-to-home-button {
     padding: 12px 25px;
     font-size: 1.2rem;
-    background-color: #1db954;
+    background: linear-gradient(135deg, rgba(16, 255, 100, 0.8), rgba(30, 179, 77, 0.8));
+    border-radius: 15px;
     border: none;
-    border-radius: 8px;
     color: white;
     cursor: pointer;
     transition: transform 0.3s, box-shadow 0.3s, background-color 0.3s;
@@ -110,4 +110,3 @@ body {
     height: 150%;
     transform: translate(-50%, -50%) scale(1);
 }
-
