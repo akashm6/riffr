@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import CountryCard from "../components/countrycard";
 import '../components/available_countries.css';
 import LoadingSpinner from "../components/loading";
-import BackButton from '../components/backbutton';
+import { Link } from "react-router-dom";
 import ErrorCard from "../components/errorcard";
 
 function AvailableCountriesPage() {
@@ -12,7 +12,7 @@ function AvailableCountriesPage() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
-    const history = useNavigate();
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchCountries = async () => {
@@ -22,10 +22,12 @@ function AvailableCountriesPage() {
                 const data = await response.json();
 
                 if (data.no_concerts) {
+                    console.log('no concerts found')
                     setError(true);
                 
                 } else {
                     setErrorMessage(`${artistName} does not have any upcoming concerts!`)
+                    console.log('error')
                     setCountries(data);
                 }
 
@@ -51,11 +53,11 @@ function AvailableCountriesPage() {
                     <CountryCard 
                         key={index} 
                         country={country.country_name} 
-                        onClick={() => history(`/concerts/${artistName}/${country.country_code}`)} 
+                        onClick={() => navigate(`/concerts/${artistName}/${country.country_code}`)} 
                     />
                 ))}
             </div>
-            <BackButton />
+            <Link className = 'back-to-home-button' onClick = {() => navigate(-1)}>Go Back</Link>
         </div>
     );
 }
