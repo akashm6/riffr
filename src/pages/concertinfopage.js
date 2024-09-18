@@ -1,10 +1,10 @@
 import React from "react";
-import { useEffect,useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import ErrorCard from '../components/errorcard';
 import ConcertCard from '../components/concertcard';
-import '../components/concertinfopage.css'
-import BackButton from "../components/backbutton";
+import '../components/concertinfopage.css';
+import { Link } from "react-router-dom";
 import LoadingSpinner from "../components/loading";
 
 function ConcertInfoPage() {
@@ -25,7 +25,14 @@ function ConcertInfoPage() {
                     throw new Error('Network response was not ok');
                 }
                 const data = await response.json();
-                setConcerts(data);
+
+                const sortedConcerts = data.sort((a, b) => {
+                    const dateA = new Date(a.date);
+                    const dateB = new Date(b.date);
+                    return dateA - dateB; 
+                });
+
+                setConcerts(sortedConcerts);
                 setLoading(false);
             } catch (error) {
                 console.error("Error fetching concert info:", error);
@@ -37,8 +44,8 @@ function ConcertInfoPage() {
         fetchConcerts();
     }, [artistName, country]);
 
-    if (loading) return <LoadingSpinner />
-    if (error || concerts.length === 0) return <ErrorCard message='No Upcoming Concerts Found.'></ErrorCard>;
+    if (loading) return <LoadingSpinner />;
+    if (error || concerts.length === 0) return <ErrorCard message='The previous listings for this country have either been cancelled, or the listings have expired. Please check the Ticketmaster website or contact the venue for more information!' />;
 
     return (
         <div className="concert-info-container">
@@ -47,7 +54,8 @@ function ConcertInfoPage() {
                     <ConcertCard key={index} concert={concert} />
                 ))}
             </div>
-            <BackButton />
+            <Link className = 'back-to-home-button' onClick = {() => navigate(-1)}>Go Back</Link>
+            
         </div>
     );
 }
