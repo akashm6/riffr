@@ -198,11 +198,15 @@ def load_country_codes():
         country_codes_to_names = {row['country_code']: row['country_name'] for row in reader}
 
 def parse_date(date):
+    if not date:
+        return 'N/A'
     date = datetime.fromisoformat(date.replace("Z", "+00:00"))
     formatted_date = date.strftime("%m/%d/%Y %I:%M %p")
     return formatted_date
 
 def parse_time(time):
+    if not time:
+        return 'N/A'
     time_object = datetime.strptime(time,'%H:%M:%S')
     formatted_time = time_object.strftime("%I:%M %p")
     return formatted_time
